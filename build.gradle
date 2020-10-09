@@ -74,6 +74,8 @@ dependencies {
 	testRuntime "org.seleniumhq.selenium:selenium-firefox-driver:3.14.0"
 
 	compile 'io.github.http-builder-ng:http-builder-ng-core:1.0.4'
+	// https://mvnrepository.com/artifact/org.postgresql/postgresql
+	compile group: 'org.postgresql', name: 'postgresql', version: '42.2.16'
 }
 
 bootRun {
