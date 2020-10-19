@@ -1,35 +1,36 @@
 buildscript {
-    repositories {
-        maven { url "https://repo.grails.org/grails/core" }
-    }
-    dependencies {
-        classpath "org.grails:grails-gradle-plugin:$grailsVersion"
-        classpath "org.grails.plugins:hibernate5:7.0.0"
-        classpath "gradle.plugin.com.github.erdi.webdriver-binaries:webdriver-binaries-gradle-plugin:2.0"
-        classpath "com.bertramlabs.plugins:asset-pipeline-gradle:3.0.10"
-    }
+	repositories {
+		maven { url "https://repo.grails.org/grails/core" }
+	}
+	dependencies {
+		classpath "org.grails:grails-gradle-plugin:$grailsVersion"
+		classpath "org.grails.plugins:hibernate5:7.0.0"
+		classpath "gradle.plugin.com.github.erdi.webdriver-binaries:webdriver-binaries-gradle-plugin:2.0"
+		classpath "com.bertramlabs.plugins:asset-pipeline-gradle:3.0.10"
+	}
 }
 
 version "0.1"
 group "task.scheduler"
 
-apply plugin:"eclipse"
-apply plugin:"idea"
-apply plugin:"war"
-apply plugin:"org.grails.grails-web"
-apply plugin:"com.github.erdi.webdriver-binaries"
-apply plugin:"org.grails.grails-gsp"
-apply plugin:"com.bertramlabs.asset-pipeline"
+apply plugin: "eclipse"
+apply plugin: "idea"
+apply plugin: "war"
+apply plugin: "org.grails.grails-web"
+apply plugin: "com.github.erdi.webdriver-binaries"
+apply plugin: "org.grails.grails-gsp"
+apply plugin: "com.bertramlabs.asset-pipeline"
 
 repositories {
-    maven { url "https://repo.grails.org/grails/core" }
+	maven { url "https://repo.grails.org/grails/core" }
+	mavenCentral()
 }
 
 configurations {
-    developmentOnly
-    runtimeClasspath {
-        extendsFrom developmentOnly
-    }
+	developmentOnly
+	runtimeClasspath {
+		extendsFrom developmentOnly
+	}
 }
 
 dependencies {
@@ -74,33 +75,35 @@ dependencies {
     testCompile "io.micronaut:micronaut-http-client"
     testRuntime "org.seleniumhq.selenium:selenium-chrome-driver:3.14.0"
     testRuntime "org.seleniumhq.selenium:selenium-firefox-driver:3.14.0"
+
+    compile 'io.github.http-builder-ng:http-builder-ng-core:1.0.4'
 }
 
 bootRun {
-    jvmArgs(
-        '-Dspring.output.ansi.enabled=always', 
-        '-noverify', 
-        '-XX:TieredStopAtLevel=1',
-        '-Xmx1024m')
-    sourceResources sourceSets.main
-    String springProfilesActive = 'spring.profiles.active'
-    systemProperty springProfilesActive, System.getProperty(springProfilesActive)
+	jvmArgs(
+			'-Dspring.output.ansi.enabled=always',
+			'-noverify',
+			'-XX:TieredStopAtLevel=1',
+			'-Xmx1024m')
+	sourceResources sourceSets.main
+	String springProfilesActive = 'spring.profiles.active'
+	systemProperty springProfilesActive, System.getProperty(springProfilesActive)
 }
 
 webdriverBinaries {
-    chromedriver '2.45.0'
-    geckodriver '0.24.0'
+	chromedriver '2.45.0'
+	geckodriver '0.24.0'
 }
 
 tasks.withType(Test) {
-    systemProperty "geb.env", System.getProperty('geb.env')
-    systemProperty "geb.build.reportsDir", reporting.file("geb/integrationTest")
-    systemProperty "webdriver.chrome.driver", System.getProperty('webdriver.chrome.driver')
-    systemProperty "webdriver.gecko.driver", System.getProperty('webdriver.gecko.driver')
+	systemProperty "geb.env", System.getProperty('geb.env')
+	systemProperty "geb.build.reportsDir", reporting.file("geb/integrationTest")
+	systemProperty "webdriver.chrome.driver", System.getProperty('webdriver.chrome.driver')
+	systemProperty "webdriver.gecko.driver", System.getProperty('webdriver.gecko.driver')
 }
 
 
 assets {
-    minifyJs = true
-    minifyCss = true
+	minifyJs = true
+	minifyCss = true
 }
