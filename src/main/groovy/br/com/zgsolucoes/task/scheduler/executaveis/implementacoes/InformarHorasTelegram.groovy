@@ -1,9 +1,13 @@
 package br.com.zgsolucoes.task.scheduler.executaveis.implementacoes
 
 import br.com.zgsolucoes.task.scheduler.executaveis.ClasseExecutavel
+import br.com.zgsolucoes.task.scheduler.executaveis.ObterDadosDoPonto
 import groovy.transform.CompileStatic
 import groovyx.net.http.HttpBuilder
+import groovyx.net.http.UriBuilder
+import io.micronaut.context.annotation.Prototype
 
+@Prototype
 @CompileStatic
 class InformarHorasTelegram implements ClasseExecutavel {
 
@@ -14,18 +18,27 @@ class InformarHorasTelegram implements ClasseExecutavel {
 		final String TELEGRAM_BOT_KEY = env['TELEGRAM_BOT_KEY']
 		final String TELEGRAM_CHAT_ID = env['TELEGRAM_CHAT_ID']
 
-		final String encodedMessage = ''
+		final ObterDadosDoPonto obterDadosDoPonto = new ObterDadosDoPonto()
+		final String encodedMessage = obterDadosDoPonto.obterDadosPonto()
+
 		final String basePath = 'https://api.telegram.org/'
-		final String uriPath = "/${TELEGRAM_BOT_ID}:${TELEGRAM_BOT_KEY}/sendMessage?chat_id=@${TELEGRAM_CHAT_ID}&text=" + encodedMessage
+		final String uriPath = "/${TELEGRAM_BOT_ID}:${TELEGRAM_BOT_KEY}/sendMessage"
 
 		final HttpBuilder httpBin = HttpBuilder.configure {
 			request.uri = basePath
 		}
 
-		def result = httpBin.get {
-			request.uri.path = uriPath
-		}
+		final Map<String, ?> params = [
+				chat_id: "@${TELEGRAM_CHAT_ID}".toString(),
+				text   : encodedMessage,
+		]
 
-		return false
+		final Map result = httpBin.get {
+			final UriBuilder uriBuilder = request.uri
+			uriBuilder.path = uriPath
+			uriBuilder.query = params
+		} as Map
+
+		return result.ok
 	}
 }

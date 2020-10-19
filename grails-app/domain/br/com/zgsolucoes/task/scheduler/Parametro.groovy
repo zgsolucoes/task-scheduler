@@ -3,13 +3,11 @@ package br.com.zgsolucoes.task.scheduler
 import grails.compiler.GrailsCompileStatic
 
 @GrailsCompileStatic
-class Executavel {
+class Parametro {
 
-	String titulo
-	String classeExecutavel
-	List<Parametro> parametros
+	String nome
+	String tipo
 
 	static constraints = {
-		titulo unique: true
 	}
 }
