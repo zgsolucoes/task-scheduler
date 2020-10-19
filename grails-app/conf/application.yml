@@ -111,7 +111,8 @@ environments:
       url: jdbc:postgresql://localhost:5434/programa-de-estagio
   test:
     dataSource:
-      dbCreate: update
+      driverClassName: org.h2.Driver
+            dbCreate: create-drop
       url: jdbc:h2:mem:testDb;MVCC=TRUE;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE
   production:
     dataSource:
