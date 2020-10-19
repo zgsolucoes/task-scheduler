@@ -5,7 +5,9 @@ import br.com.zgsolucoes.task.scheduler.executaveis.ObterDadosDoPonto
 import groovy.transform.CompileStatic
 import groovyx.net.http.HttpBuilder
 import groovyx.net.http.UriBuilder
+import io.micronaut.context.annotation.Prototype
 
+@Prototype
 @CompileStatic
 class InformarHorasTelegram implements ClasseExecutavel {
 
