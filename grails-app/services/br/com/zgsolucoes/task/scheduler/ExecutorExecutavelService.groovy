@@ -10,11 +10,13 @@ class ExecutorExecutavelService {
 
 	ClasseExecutavelFactoryService classeExecutavelFactoryService
 
-	//Informar horas completas no dia pelo telegram
+	ExecucaoFactoryService execucaoFactoryService
+
 	boolean executar(final String titulo) {
 		final Executavel executavel = Executavel.findByTitulo(titulo)
+		final Execucao execucao = execucaoFactoryService.criarExecucao(executavel)
 		final ClasseExecutavel classeExecutavel = classeExecutavelFactoryService.procurarClasseExecutavel(executavel)
-		return classeExecutavel.execute()
+		return classeExecutavel.execute(execucao)
 	}
 
 }

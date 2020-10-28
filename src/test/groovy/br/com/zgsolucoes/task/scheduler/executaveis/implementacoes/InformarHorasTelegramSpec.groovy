@@ -9,7 +9,7 @@ class InformarHorasTelegramSpec extends Specification {
 		InformarHorasTelegram informarHorasTelegram = new InformarHorasTelegram()
 
 		when:
-		final boolean result = informarHorasTelegram.execute()
+		final boolean result = informarHorasTelegram.execute(null)
 
 		then:
 		result

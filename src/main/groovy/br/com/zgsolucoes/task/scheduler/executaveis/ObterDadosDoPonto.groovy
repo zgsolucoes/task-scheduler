@@ -1,16 +1,20 @@
 package br.com.zgsolucoes.task.scheduler.executaveis
 
 import groovy.transform.CompileStatic
+import io.micronaut.context.annotation.Prototype
 
 import java.time.format.DateTimeFormatter
 import java.util.concurrent.TimeUnit
 
+@Prototype
 @CompileStatic
 class ObterDadosDoPonto {
 
 	String obterDadosPonto() {
 		TimeZone.default = TimeZone.getTimeZone('GMT-3')
-		URL url = new URL('https://ponto.zgsolucoes.com.br/dok/espelho')
+		final Map env = System.getenv()
+		final String PONTO_URL = env['PONTO_URL']
+		URL url = new URL(PONTO_URL)
 		HttpURLConnection con = (HttpURLConnection) url.openConnection()
 		con.setRequestMethod('POST')
 		con.doOutput = true
