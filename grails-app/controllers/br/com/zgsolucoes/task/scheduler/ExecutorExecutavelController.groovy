@@ -8,12 +8,13 @@ class ExecutorExecutavelController {
 
 	ExecutorExecutavelService executorExecutavelService
 
-	def executar(final String titulo) {
-		if (!titulo) {
-			render(status: HttpStatus.INTERNAL_SERVER_ERROR)
+	def executar(final Executavel executavel) {
+		if (!executavel) {
+			render(status: HttpStatus.NOT_FOUND)
 			return
 		}
 
-		executorExecutavelService.executar(titulo)
+		executorExecutavelService.executar(executavel)
+		respond([status: HttpStatus.OK])
 	}
 }

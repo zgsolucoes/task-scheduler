@@ -12,8 +12,7 @@ class ExecutorExecutavelService {
 
 	ExecucaoFactoryService execucaoFactoryService
 
-	boolean executar(final String titulo) {
-		final Executavel executavel = Executavel.findByTitulo(titulo)
+	boolean executar(final Executavel executavel) {
 		final Execucao execucao = execucaoFactoryService.criarExecucao(executavel)
 		final ClasseExecutavel classeExecutavel = classeExecutavelFactoryService.procurarClasseExecutavel(executavel)
 		return classeExecutavel.execute(execucao)

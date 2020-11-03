@@ -1,99 +1,72 @@
 package br.com.zgsolucoes.task.scheduler
 
 import grails.validation.ValidationException
+
 import static org.springframework.http.HttpStatus.*
 
 class ExecutavelController {
 
 	ExecutavelService executavelService
 
-	static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
-
-	def index(Integer max) {
-		params.max = Math.min(max ?: 10, 100)
-		respond executavelService.list(params), model: [executavelCount: executavelService.count()]
-	}
+	static allowedMethods = [
+			list     : "GET",
+			show     : "GET",
+			adicionar: "POST",
+			atualizar: "PUT",
+			remover  : "DELETE"
+	]
 
 	def show(Long id) {
 		respond executavelService.get(id)
 	}
 
-	def create() {
-		respond new Executavel(params)
+	def list(Integer max) {
+		params.max = Math.min(max ?: 10, 100)
+		respond executavelService.list(params)
 	}
 
-	def save(Executavel executavel) {
+	def adicionar(Executavel executavel) {
 		if (executavel == null) {
-			notFound()
+			respond([status: NOT_FOUND])
+			return
+		}
+
+		try {
+			executavel.dataCriacao = new Date()
+			executavelService.save(executavel)
+		} catch (ValidationException e) {
+			respond([status: INTERNAL_SERVER_ERROR])
+			return
+		}
+
+		respond([status: OK])
+	}
+
+	def atualizar(Executavel executavel) {
+		if (executavel == null) {
+			respond([status: NOT_FOUND])
 			return
 		}
 
 		try {
 			executavelService.save(executavel)
 		} catch (ValidationException e) {
-			respond executavel.errors, view: 'create'
+			respond([status: INTERNAL_SERVER_ERROR])
 			return
 		}
 
-		request.withFormat {
-			form multipartForm {
-				flash.message = message(code: 'default.created.message', args: [message(code: 'executavel.label', default: 'Executavel'), executavel.id])
-				redirect executavel
-			}
-			'*' { respond executavel, [status: CREATED] }
-		}
+		respond([status: OK])
 	}
 
-	def edit(Long id) {
-		respond executavelService.get(id)
-	}
-
-	def update(Executavel executavel) {
-		if (executavel == null) {
-			notFound()
-			return
-		}
-
-		try {
-			executavelService.save(executavel)
-		} catch (ValidationException e) {
-			respond executavel.errors, view: 'edit'
-			return
-		}
-
-		request.withFormat {
-			form multipartForm {
-				flash.message = message(code: 'default.updated.message', args: [message(code: 'executavel.label', default: 'Executavel'), executavel.id])
-				redirect executavel
-			}
-			'*' { respond executavel, [status: OK] }
-		}
-	}
-
-	def delete(Long id) {
+	def remover(Long id) {
 		if (id == null) {
-			notFound()
+			respond([status: NOT_FOUND])
 			return
 		}
 
 		executavelService.delete(id)
 
-		request.withFormat {
-			form multipartForm {
-				flash.message = message(code: 'default.deleted.message', args: [message(code: 'executavel.label', default: 'Executavel'), id])
-				redirect action: "index", method: "GET"
-			}
-			'*' { render status: NO_CONTENT }
-		}
+		respond([status: OK])
 	}
 
-	protected void notFound() {
-		request.withFormat {
-			form multipartForm {
-				flash.message = message(code: 'default.not.found.message', args: [message(code: 'executavel.label', default: 'Executavel'), params.id])
-				redirect action: "index", method: "GET"
-			}
-			'*' { render status: NOT_FOUND }
-		}
-	}
 }
